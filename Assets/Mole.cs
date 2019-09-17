@@ -20,16 +20,20 @@ public class Mole : MonoBehaviour, OnTouch3D
     // Start is called before the first frame update
     void Start()
     {
-        game = GetComponent<GameLogic>();
-        status = 3;
-        ellapsedTime = 0.0f;
+        // cross object find game 
+        // avoid null pointer
+        game = GameObject.Find("AR Session Origin").GetComponent<GameLogic>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        ellapsedTime -= Time.deltaTime;
         var position = gameObject.transform.localPosition;
+        ellapsedTime -= Time.deltaTime;
+        if (!game.isStarted()) {
+            gameObject.transform.localPosition = new Vector3(position.x, DOWN_Y, position.z);
+            return;
+        }
         switch (status)
         {
             case 0:
@@ -48,7 +52,8 @@ public class Mole : MonoBehaviour, OnTouch3D
                         gameObject.transform.localPosition = new Vector3(position.x, UP_Y, position.z);
                         status = 2;
                         // hold this position for 0.8-1.2 second
-                        ellapsedTime = Random.Range(0.8f, 1.2f);
+                        //ellapsedTime = Random.Range(0.8f, 1.2f);
+                        ellapsedTime = UP_TIME;
                     } else
                     {
                         gameObject.transform.Translate(new Vector3(0, ANIM_SPEED * Time.deltaTime, 0));
@@ -81,12 +86,11 @@ public class Mole : MonoBehaviour, OnTouch3D
                     break;
                 }
         }
-
     }
 
-    public int getStatus()
-    {
-        return status;
+    public void init() {
+        status = 3;
+        ellapsedTime = Random.Range(1.5f, 5.0f);
     }
 
     public void OnTouch()

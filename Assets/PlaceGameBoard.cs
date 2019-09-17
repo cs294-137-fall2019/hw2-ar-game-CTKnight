@@ -46,14 +46,12 @@ public class PlaceGameBoard : MonoBehaviour
                     var hitPose = hits[0].pose;
                     // Now we will activate our game board and place it at the
                     // chosen location.
-                    gameBoard.SetActive(true);
                     gameBoard.transform.position = hitPose.position;
                     placed = true;
                     // After we have placed the game board we will disable the
                     // planes in the scene as we no longer need them.
                     planeManager.SetTrackablesActive(false);
                     game.ready();
-
                 }
             }
         }

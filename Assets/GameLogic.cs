@@ -1,12 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class GameLogic : MonoBehaviour
 {
     private const int MISS_THRESHOLD = 5;
-
     public int count;
     public int miss;
     // 0: ready
@@ -58,8 +55,10 @@ public class GameLogic : MonoBehaviour
                 }
             case 2:
                 {
+                    gameControlButton.gameObject.SetActive(true);
                     gameControlButton.GetComponentInChildren<Text>().text = "Restart";
                     updateText("Click on Restart!");
+                    setMole(false);
                     break;
                 }
             case 3:
@@ -73,13 +72,24 @@ public class GameLogic : MonoBehaviour
 
     public void ready()
     {
+        gameBoard.SetActive(true);
         status = 0;
     }
 
+    public void setMole(bool active) {
+        foreach (var mole in gameBoard.GetComponents<Mole>())
+        {
+            mole.gameObject.SetActive(active);
+            if (active) {
+                mole.init();
+            }
+        }
+    }
     public void gameStart()
     {
-        gameBoard.SetActive(true);
         init();
+        status = 1;
+        setMole(true);
     }
 
     private string formatScore()
@@ -87,9 +97,9 @@ public class GameLogic : MonoBehaviour
         return $"{count} hit {miss} miss!";
     }
 
-    private void updateText(string content)
+    public void updateText(string content)
     {
-        messageText.text = content;
+        messageText.text = content + $" status: {status}";
     }
 
     public void onControlClicked()
@@ -108,5 +118,14 @@ public class GameLogic : MonoBehaviour
                     break;
                 }
         }
+    }
+
+    public int getStatus()
+    {
+        return status;
+    }
+
+    public bool isStarted() {
+        return getStatus() == 1;
     }
 }
