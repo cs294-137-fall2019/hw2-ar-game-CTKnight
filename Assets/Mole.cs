@@ -89,7 +89,7 @@ public class Mole : MonoBehaviour, OnTouch3D
     }
 
     public void init() {
-        status = 3;
+        status = 0;
         ellapsedTime = Random.Range(1.5f, 5.0f);
     }
 

@@ -4,6 +4,7 @@ using UnityEngine.UI;
 public class GameLogic : MonoBehaviour
 {
     private const int MISS_THRESHOLD = 5;
+    private const int COUNT_THRESHOLD = 30;
     public int count;
     public int miss;
     // 0: ready
@@ -24,7 +25,7 @@ public class GameLogic : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (miss >= MISS_THRESHOLD)
+        if (miss >= MISS_THRESHOLD || count >= COUNT_THRESHOLD)
         {
             status = 2;
         }
@@ -57,7 +58,13 @@ public class GameLogic : MonoBehaviour
                 {
                     gameControlButton.gameObject.SetActive(true);
                     gameControlButton.GetComponentInChildren<Text>().text = "Restart";
-                    updateText("Click on Restart!");
+                    string msg = "";
+                    if (miss >= MISS_THRESHOLD) {
+                        msg = "You lost!";
+                    } else {
+                        msg = "You win!";
+                    }
+                    updateText(msg);
                     setMole(false);
                     break;
                 }
@@ -114,7 +121,8 @@ public class GameLogic : MonoBehaviour
                 }
             case 2:
                 {
-                    status = 0;
+                    status = 1;
+                    gameStart();
                     break;
                 }
         }
