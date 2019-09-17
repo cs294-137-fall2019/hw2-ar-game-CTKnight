@@ -1,11 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 
 public class ARButtonManager : MonoBehaviour
 {
+    private static readonly string[] interactList = { "Interactable", "Mole" };
     private Camera arCamera;
     private PlaceGameBoard placeGameBoard;
 
@@ -21,21 +23,25 @@ public class ARButtonManager : MonoBehaviour
 
     void Update()
     {
-        if (placeGameBoard.Placed() && Input.touchCount > 0)
+        var count = Input.touchCount;
+        if (placeGameBoard.Placed() && count > 0)
         {
-            Vector2 touchPosition = Input.GetTouch(0).position;
-            // Convert the 2d screen point into a ray.
-            Ray ray = arCamera.ScreenPointToRay(touchPosition);
-            // Check if this hits an object within 100m of the user.
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, 100))
+            for (int i = 0; i < count; i++)
             {
-                // Check that the object is interactable.
-                if (hit.transform.tag == "Interactable")
-                    // Call the OnTouch function.
-                    // Note the use of OnTouch3D here lets us
-                    // call any class inheriting from OnTouch3D.
-                    hit.transform.GetComponent<OnTouch3D>().OnTouch();
+                Vector2 touchPosition = Input.GetTouch(i).position;
+                // Convert the 2d screen point into a ray.
+                Ray ray = arCamera.ScreenPointToRay(touchPosition);
+                // Check if this hits an object within 100m of the user.
+                RaycastHit hit;
+                if (Physics.Raycast(ray, out hit, 100))
+                {
+                    // Check that the object is interactable.
+                    if (interactList.Any(tag => hit.transform.tag == tag))
+                        // Call the OnTouch function.
+                        // Note the use of OnTouch3D here lets us
+                        // call any class inheriting from OnTouch3D.
+                        hit.transform.GetComponent<OnTouch3D>().OnTouch();
+                }
             }
         }
     }

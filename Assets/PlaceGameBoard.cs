@@ -13,6 +13,7 @@ public class PlaceGameBoard : MonoBehaviour
     // These will store references to our other components.
     private ARRaycastManager raycastManager;
     private ARPlaneManager planeManager;
+    private GameLogic game;
     // This will indicate whether the game board is set.
     private bool placed = false;
 
@@ -22,6 +23,7 @@ public class PlaceGameBoard : MonoBehaviour
         // GetComponent allows us to reference other parts of this game object.
         raycastManager = GetComponent<ARRaycastManager>();
         planeManager = GetComponent<ARPlaneManager>();
+        game = GetComponent<GameLogic>();
     }
 
     // Update is called once per frame.
@@ -50,6 +52,7 @@ public class PlaceGameBoard : MonoBehaviour
                     // After we have placed the game board we will disable the
                     // planes in the scene as we no longer need them.
                     planeManager.SetTrackablesActive(false);
+                    game.ready();
 
                 }
             }
