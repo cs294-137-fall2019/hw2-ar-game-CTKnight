@@ -29,11 +29,12 @@ public class Mole : MonoBehaviour, OnTouch3D
     void Update()
     {
         var position = gameObject.transform.localPosition;
-        ellapsedTime -= Time.deltaTime;
         if (!game.isStarted()) {
+            ellapsedTime = Random.Range(1.5f, 5.0f);
             gameObject.transform.localPosition = new Vector3(position.x, DOWN_Y, position.z);
             return;
         }
+        ellapsedTime -= Time.deltaTime;
         switch (status)
         {
             case 0:
